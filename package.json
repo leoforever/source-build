@@ -1,0 +1,9 @@
+{
+  "name": "source-build",
+  "version": "1.0.0",
+  "description": "从源码编译安装软件包的辅助技能，支持 Python、Node.js、C/C++、Rust 等，包含常见问题解决方案和经验记录",
+  "main": "SKILL.md",
+  "keywords": ["compile", "build", "source", "python", "nodejs", "cmake", "loongarch"],
+  "author": "loongson",
+  "license": "MIT"
+}
