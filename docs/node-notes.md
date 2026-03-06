@@ -2,12 +2,11 @@
 
 ## 📦 龙芯架构安装
 
-**快速安装指南:** 查看 [`nodejs-loongarch-install.md`](nodejs-loongarch-install.md)
+**完整安装指南:** 查看 [`nodejs-loongarch-install.md`](nodejs-loongarch-install.md)
 
 **一键安装脚本:**
 ```bash
 ~/.openclaw/skills/source-build/scripts/install-node-deps.sh
-# 选择 1) 龙芯架构完整安装
 ```
 
 ---
@@ -92,7 +91,6 @@ npm install node-sass --ignore-scripts
 **解决:**
 ```bash
 sudo apt install libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-npm install canvas
 ```
 
 ---
@@ -107,13 +105,10 @@ npm install bcrypt
 
 ---
 
-
-
----
-
 ## 版本管理
 
 ### 使用 nvm 管理 Node 版本
+
 ```bash
 # 安装 nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -126,32 +121,31 @@ nvm use 18
 nvm alias default 18
 ```
 
-### 检查项目要求的版本
-```bash
-cat package.json | grep -A3 '"engines"'
-```
-
 ---
 
 ## 调试技巧
 
 ### 查看详细安装过程
+
 ```bash
 npm install --verbose 2>&1 | tee install.log
 ```
 
 ### 查看已安装包
+
 ```bash
 npm list
 npm list -g --depth=0  # 全局包
 ```
 
 ### 检查过时的包
+
 ```bash
 npm outdated
 ```
 
 ### 清理缓存
+
 ```bash
 npm cache clean --force
 npm cache verify
@@ -167,41 +161,12 @@ npm cache verify
 
 ---
 
-## 实用命令
-
-### 全局安装 CLI 工具
-```bash
-npm install -g <package>
-```
-
-### 本地安装项目依赖
-```bash
-npm install
-```
-
-### 安装开发依赖
-```bash
-npm install --save-dev <package>
-```
-
-### 查看包信息
-```bash
-npm info <package>
-```
-
-### 快速创建项目
-```bash
-npm init -y  # 快速创建 package.json
-```
-
----
-
 ## 常见问题速查
 
 | 问题 | 解决方案 |
 |------|----------|
 | EACCES 权限错误 | `npm config set prefix ~/.npm-global` |
 | ENOSPC 空间不足 | 清理磁盘或增加空间 |
-| ETIMEDOUT 超时 | 换镜像源或检查网络 |
+| ETIMEDOUT 超时 | 检查网络或换镜像 |
 | node-gyp 失败 | 安装 `python3 make g++` |
 | 包版本冲突 | `npm install --legacy-peer-deps` |

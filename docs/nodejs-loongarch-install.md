@@ -25,7 +25,7 @@ wget https://unofficial-builds.nodejs.org/download/release/v22.20.0/node-v22.20.
 # 2. 解压
 tar -xzvf node-v22.20.0-linux-loong64.tar.gz
 
-# 3. 配置 PATH
+# 3. 配置 PATH (需要 root 权限)
 sudo vim /etc/profile
 # 最后一行添加：
 export PATH=/home/loongson/node-v22.20.0-linux-loong64/bin:$PATH
@@ -114,18 +114,6 @@ sudo vim /etc/profile
 source /etc/profile
 ```
 
-### Q: 如何安装多个版本？
-
-**A:** 下载不同版本到不同目录，切换 PATH
-```bash
-# 安装 v20
-wget https://unofficial-builds.nodejs.org/download/release/v20.x.x/node-v20.x.x-linux-loong64.tar.gz
-tar -xzvf node-v20.x.x-linux-loong64.tar.gz
-
-# 切换版本（编辑 /etc/profile）
-export PATH=/home/loongson/node-v20.x.x-linux-loong64/bin:$PATH
-```
-
 ---
 
 ## 🔧 编译依赖
@@ -140,9 +128,9 @@ sudo apt install build-essential python3 make
 
 ## 📚 相关文档
 
-- [common-deps.md](common-deps.md) - 常见依赖安装
-- [node-notes.md](node-notes.md) - Node.js 编译经验
-- [troubleshooting.md](troubleshooting.md) - 问题排查
+- **[node-notes.md](node-notes.md)** - Node.js 项目编译经验
+- **[common-deps.md](common-deps.md)** - 常见依赖安装
+- **[troubleshooting.md](troubleshooting.md)** - 问题排查
 
 ---
 
