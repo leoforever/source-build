@@ -1,179 +1,182 @@
 ---
 name: source-build
-description: 从源码编译安装软件包的辅助技能，支持 Python、Node.js、C/C++、Rust 等，包含常见问题解决方案、依赖安装、错误诊断和经验记录
+description: 龙芯 LoongArch 源码编译专用技能，包含架构适配补丁、真实项目经验和排坑指南
 ---
 
-# Source Build - 源码编译专家
+# Source Build - 龙芯编译专家
 
-**Capability Summary:** 从源码编译安装软件包的辅助技能，支持 Python、Node.js、C/C++、Rust 等语言，包含常见问题解决方案、依赖安装、错误诊断和经验记录。
+**专注 LoongArch 架构特有的编译问题和解决方案**，通用编译流程大模型已知，不赘述。
 
-你是源码编译专家。使用这个技能帮助用户从源码编译安装软件包。
+---
 
-## 🎯 快速开始
+## 🚀 快速决策树
 
-"当用户需要编译源码时，按以下流程处理："
+**根据用户问题关键词，读取对应文档获取详细方案：**
 
-### 决策树
-
-- **"帮我编译这个 Python 项目"** → 检查 `docs/python-notes.md`
-  - 有 `setup.py` / `pyproject.toml` → Python 项目
-  - PEP 668 错误 → 虚拟环境或 `--break-system-packages`
-  - cryptography/lxml 失败 → 先装系统依赖
-
-- **"Node.js 项目编译失败"** → 检查 `docs/node-notes.md`
-  - node-gyp 错误 → 安装 `python3 make g++`
-  - npm 超时 → 检查网络连接
-  - node-sass 失败 → 用 dart-sass 替代
-
-- **"龙芯 Node.js 安装"** → 检查 `docs/common-deps.md`
-  - 下载 loong64 非官方构建
-  - 配置全局 PATH 到 `/etc/profile`
-  - 验证安装 `node --version`
-
-- **"C/C++ 项目怎么编译"** → 检查 `docs/common-deps.md`
-  - 有 `CMakeLists.txt` → CMake 流程
-  - 有 `configure` → autotools 流程
-  - 缺头文件 → `apt-file search` 查找
-
-- **"Rust 项目编译问题"** → 检查 `docs/troubleshooting.md`
-  - 下载失败 → 配置镜像源
-  - 编译慢 → 使用 sccache
-
-## 🛠️ 可用脚本
-
-所有脚本在 `./scripts/`:
-
-### 环境检查
-```bash
-./scripts/check-env.sh # 检查编译环境
+```
+用户问题
+    │
+    ├─→ "config.sub 不识别" → 读取 docs/arch-fixes.md
+    ├─→ "没有 loong64 wheel" → 读取 docs/python-wheel.md
+    ├─→ "Rust 下载失败" → 读取 docs/rust-fix.md
+    ├─→ "node-gyp 失败" → 读取 docs/node-gyp.md
+    ├─→ "编译器特性不支持" → 读取 docs/source-patching.md
+    ├─→ "sqlite-vec / npm 包缺少支持" → 读取 docs/case-sqlite-vec.md
+    ├─→ "SQLite 扩展编译" → 读取 docs/case-sqlite-vec.md
+    ├─→ "jemalloc 崩溃/链接错误" → 读取 docs/rust-env.md
+    ├─→ "relocation 错误" → 读取 docs/rust-env.md
+    ├─→ "Rust 版本过低/工具链" → 读取 docs/rust-toolchain.md
+    ├─→ "依赖版本冲突" → 读取 docs/dependency-downgrade.md
+    ├─→ "Go 编译/GOPROXY" → 读取 docs/go-build.md
+    ├─→ "ollama / GGML / LSX 优化" → 读取 docs/case-ollama-loongarch.md
+    ├─→ "pip 源配置" → 读取 docs/pip-sources.md
+    ├─→ "Docker 容器编译" → 读取 docs/docker-build.md
+    └─→ "项目编译经验" → 读取 docs/projects/
 ```
 
-### 依赖安装
+---
+
+## 📚 可用文档索引
+
+| 文档 | 触发关键词 | 用途 |
+|------|-----------|------|
+| [docs/arch-fixes.md](docs/arch-fixes.md) | config.sub、架构识别、架构宏 | 架构适配补丁 |
+| [docs/python-wheel.md](docs/python-wheel.md) | wheel、pip、no-binary | Python wheel 缺失 |
+| [docs/rust-fix.md](docs/rust-fix.md) | Rust、cargo、下载失败 | Rust 编译问题 |
+| [docs/rust-toolchain.md](docs/rust-toolchain.md) | rust-version、nightly、工具链 | Rust 版本/工具链 |
+| [docs/rust-env.md](docs/rust-env.md) | jemalloc、relocation、RUSTFLAGS | Rust 环境变量 |
+| [docs/source-patching.md](docs/source-patching.md) | 条件编译、架构宏、patch | 源码修改补丁 |
+| [docs/node-gyp.md](docs/node-gyp.md) | node-gyp、npm、native | Node 原生模块 |
+| [docs/case-sqlite-vec.md](docs/case-sqlite-vec.md) | sqlite-vec、npm 包适配 | npm 包平台适配案例 |
+| [docs/case-ollama-loongarch.md](docs/case-ollama-loongarch.md) | ollama、GGML、LSX/LASX | Ollama/LLM 编译优化 |
+| [docs/dependency-downgrade.md](docs/dependency-downgrade.md) | 依赖冲突、版本降级 | 依赖版本管理 |
+| [docs/go-build.md](docs/go-build.md) | Go、GOPROXY、loong64、静态链接 | Go 编译配置 |
+| [docs/pip-sources.md](docs/pip-sources.md) | pip 源、龙芯源 | pip 镜像源配置 |
+| [docs/docker-build.md](docs/docker-build.md) | Docker、容器、镜像、lcr | Docker 容器编译环境 |
+| [docs/verification-template.md](docs/verification-template.md) | 验证报告、文档复现性 | 编译验证报告模板 |
+| [docs/projects/](docs/projects/) | onnxruntime、maturin、项目名 | 真实项目经验 |
+
+---
+
+## 📋 编译日志规则（强制）
+
+所有编译过程必须记录到日志文件：
+
 ```bash
-./scripts/install-python-deps.sh # Python 编译依赖
-./scripts/install-node-deps.sh   # Node.js 编译依赖
+LOGFILE="/tmp/build-$(date +%Y%m%d-%H%M%S).log"
+cargo build --release 2>&1 | tee -a $LOGFILE
 ```
 
-### 编译流程
+详细日志规范见：[docs/projects/template.md](docs/projects/template.md)
+
+### 验证报告规则
+
+完成编译验证后，应生成验证报告：
+
 ```bash
-# Python
-python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-
-# Node.js
-npm install
-npm install -g .
-
-# C/C++ (CMake)
-mkdir build && cd build
-cmake .. && make -j$(nproc)
-
-# C/C++ (autotools)
-./configure && make && sudo make install
+# 验证报告模板
+REPORT="/tmp/build-verification-$(date +%Y%m%d-%H%M%S).md"
 ```
 
-## 📚 文档分类
+验证报告应包含：
+- ✅/❌ 每个步骤是否成功
+- 编译产物位置和大小
+- 版本号是否正确
+- 是否真正静态链接（如适用）
+- 文档是否需要更新
 
-### 🔧 常见依赖 (`docs/common-deps.md`)
-Python、Node.js、C/C++、Rust 的系统依赖安装命令
+---
 
-### 🐛 问题排查 (`docs/troubleshooting.md`)
-- Python: PEP 668、cryptography、lxml、numpy
-- Node.js: node-gyp、npm 超时、native 模块
-- C/C++: 缺头文件、链接错误、CMake 配置
-- Rust: 下载失败、镜像配置
+## 🎯 使用示例
 
-### 🐍 Python 经验 (`docs/python-notes.md`)
-- 虚拟环境配置
-- 常见包编译笔记
-- 加速编译技巧
-- 调试技巧
+**用户:** "cryptography 安装失败"  
+**你:** → 读取 `docs/python-wheel.md` → 提供系统包方案
 
-### 🟢 Node.js 经验 (`docs/node-notes.md`)
-- npm 镜像配置
-- node-gyp 问题
-- 版本管理
-- 常见问题速查
+**用户:** "config.sub 报错不识别 loongarch64"  
+**你:** → 读取 `docs/arch-fixes.md` → 提供更新脚本
 
-### 💡 示例 (`examples/`)
-- `compile-scripts.sh` - 编译脚本示例
+**用户:** "帮我编译 onnxruntime"  
+**你:** → 读取 `docs/projects/onnxruntime.md` → 应用补丁 + 编译
 
-### 📋 配置片段 (`snippets/common-configs.md`)
-现成的配置命令：
-- Python 虚拟环境
-- Rust 镜像
-- CMake 标准流程
+**用户:** "polars 需要 Rust 1.80+"  
+**你:** → 读取 `docs/rust-toolchain.md` → 升级 Rust
 
-## 📋 工作流程
+---
 
-1. **识别项目类型**
-   - Python: `ls setup.py pyproject.toml`
-   - Node.js: `ls package.json`
-   - C/C++: `ls CMakeLists.txt configure`
-   - Rust: `ls Cargo.toml`
+## ⚠️ 核心原则
 
-2. **检查编译环境**
-   ```bash
-   ./scripts/check-env.sh
-   ```
+1. **系统源优先** - 能 apt/yum 就别 pip/npm
+2. **升级环境优先** - 能 rustup 就别改代码
+3. **降级依赖优先** - 能换版本就别 patch
+4. **日志必须记录** - 所有编译过程记日志
+5. **先查 skill 再行动** - 遇到问题先读取相关文档，不凭经验推断
 
-3. **安装系统依赖**
-   ```bash
-   ./scripts/install-python-deps.sh  # 或 install-node-deps.sh
-   ```
+---
 
-4. **执行编译**
-   - 参考对应语言的文档
-   - 记录编译日志：`command 2>&1 | tee compile.log`
+## 🔍 编译前检查清单（强制）
 
-5. **处理错误**
-   - 查看 `docs/troubleshooting.md`
-   - 根据错误信息查找解决方案
+**开始任何编译任务前，必须按顺序检查：**
 
-6. **验证安装**
-   ```bash
-   python -c "import xxx; print(xxx.__version__)"
-   xxx --version
-   ```
+### Step 1: 识别问题类型
 
-## 💡 提示
+根据问题关键词读取对应文档：
+- Node.js 版本/安装 → `docs/node-gyp.md`
+- Python 包/wheel → `docs/python-wheel.md`
+- Rust 工具链 → `docs/rust-toolchain.md`
+- Docker 容器 → `docs/docker-build.md`
+- pip 源 → `docs/pip-sources.md`
+- Go 模块 → `docs/go-build.md`
+- 架构识别 → `docs/arch-fixes.md`
 
-- 始终记录编译日志到文件
-- 优先使用 `apt` 安装系统依赖
-- Python 3.12+ 注意 PEP 668
-- Rust 编译优先用系统包
-- 编译失败时保留错误信息
+### Step 2: 读取对应文档
 
-## 📝 输出格式
+**必须读取完整文档**，不要跳过任何章节。
 
-编译完成后输出：
-- ✅ 成功 / ❌ 失败
-- 📦 安装路径
-- ⚠️ 遇到的问题及解决方案
-- ✅ 验证命令
+文档中包含：
+- ✅ 已验证的解决方案
+- ✅ 龙芯平台特有的配置
+- ✅ 常见陷阱和避坑指南
 
-## 🎯 示例交互
+### Step 3: 按文档执行
 
-**用户:** "帮我编译这个 Python 项目"
+**严格遵循文档步骤**，不要：
+- ❌ 使用系统默认版本（如 `dnf install nodejs` 只有 v18）
+- ❌ 凭经验推断（如假设 GPG 密钥需要手动导入）
+- ❌ 跳过验证步骤
 
-**你:**
-1. 检查项目类型：`ls setup.py pyproject.toml`
-2. 安装依赖：`./scripts/install-python-deps.sh`
-3. 创建虚拟环境并编译
-4. 如果出错，参考 `docs/troubleshooting.md`
-5. 验证安装
+---
 
-**用户:** "cryptography 安装失败"
+## 🚨 常见错误示例
 
-**你:**
-1. 识别问题：Rust 编译需要网络
-2. 提供方案：`sudo apt install python3-cryptography`
-3. 参考：`docs/troubleshooting.md` 的 Rust 部分
+### ❌ Node.js 版本问题
 
-**用户:** "npm install 卡住了"
+**症状：** 使用 `dnf install nodejs` 安装后版本过低
 
-**你:**
-1. 识别问题：网络超时
-2. 检查网络连接
-3. 清理重试：`npm cache clean --force && npm install`
+**原因：** 没有先读取 `docs/node-gyp.md`，该文档明确说明龙芯平台 dnf 源只有 Node 18，应使用 unofficial-builds。
+
+**正确做法：**
+```bash
+wget https://unofficial-builds.nodejs.org/download/release/v22.20.0/node-v22.20.0-linux-loong64.tar.gz
+tar -xzf node-v22.20.0-linux-loong64.tar.gz
+export PATH=/opt/node-v22.20.0-linux-loong64/bin:$PATH
+```
+
+### ❌ GPG 密钥问题
+
+**症状：** 在容器内手动导入 GPG 密钥，但实际不需要
+
+**原因：** 没有先检查 `docs/docker-build.md`，文档说明 loongnix-server 通常已预配置。
+
+---
+
+## 🎯 使用示例
+
+**用户:** "Docker 容器里 build openclaw"  
+**你:** 
+1. → 读取 `docs/docker-build.md`（Docker 容器编译）
+2. → 读取 `docs/node-gyp.md`（Node.js 安装）
+3. → 按文档步骤执行（使用 unofficial-builds 安装 Node 22+）
+
+---
+
+*完整技能文档，按需加载子文档*
